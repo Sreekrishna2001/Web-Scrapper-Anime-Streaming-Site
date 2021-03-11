@@ -1,2 +1,2 @@
 import eplinkgenerator as eplink
-print(eplink.getiframepage("bleach", "10"))
+print(eplink.getiframepage("naruto", "10"))

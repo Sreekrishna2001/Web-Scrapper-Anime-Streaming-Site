@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 from bs4 import BeautifulSoup
+import eplinkgenerator as eplink
 import requests
 app = Flask(__name__)
 mydb = mysql.connector.connect(
@@ -104,7 +105,7 @@ def animix():
     if request.method == 'POST':
         anime = request.form['anime']
         ep = request.form['ep']
-        import eplinkgenerator as eplink
+
         # eplink.getiframepage()
         linkep = eplink.getiframepage(anime, ep)
         return render_template('anime.html', link=linkep)
