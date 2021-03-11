@@ -105,10 +105,12 @@ def animix():
     if request.method == 'POST':
         anime = request.form['anime']
         ep = request.form['ep']
-
         # eplink.getiframepage()
-        linkep = eplink.getiframepage(anime, ep)
-        return render_template('anime.html', link=linkep)
+        # linkep = eplink.getiframepage(anime, ep)
+        animix = eplink.animix()
+        lik = animix.getiframepage(anime, ep)
+        animix.webd.quit()
+        return render_template('anime.html', link=lik)
     if request.method == 'GET':
         return render_template('anime.html', link=None)
 
