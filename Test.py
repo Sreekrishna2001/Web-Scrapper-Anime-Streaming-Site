@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, make_response
 import mysql.connector
 from bs4 import BeautifulSoup
+import  json
 import eplinkgenerator as eplink
 import requests
 app = Flask(__name__)
@@ -100,8 +101,8 @@ def animehome():
     return str(soup)
 
 
-@app.route('/animix', methods=['GET', 'POST'])
-def animix():
+@app.route('/animix/<epno>', methods=['GET', 'POST'])
+def animix(epno):
     if request.method == 'POST':
         anime = request.form['anime']
         ep = request.form['ep']
@@ -112,7 +113,10 @@ def animix():
         animix.webd.quit()
         return render_template('anime.html', link=lik)
     if request.method == 'GET':
-        return render_template('anime.html', link=None)
+        animix = eplink.animix()
+        animenam=request.cookies.get('animename')
+        lik = animix.getiframepage(animenam, epno)
+        return render_template('anime.html', link=lik)
 
 
 @app.route('/searchanime', methods=['POST', 'GET'])
@@ -122,7 +126,16 @@ def searchanime():
     if request.method == 'POST':
         aniname = request.form['animename']
         searchres = eplink.gogoscrap()
-        return searchres.search(aniname)
+        d = searchres.search(aniname)
+        return render_template('searchres.html', data=d)
+
+
+@app.route('/category/<anname>')
+def animeinfopage(anname):
+    aninfo = eplink.gogoscrap()
+    resp = make_response(render_template('showanime.html', data=aninfo.getanimeinfo(anname)))
+    resp.set_cookie('animename', anname)
+    return resp
 
 
 if __name__ == '__main__':

@@ -12,8 +12,7 @@ class webdriversrapconn:
     def conn(self):
         options = Options()
         options.headless = True
-        self.driver = webdriver.Chrome(
-            r"C:\Users\KITTU7410\Desktop\chromedriver_win32\chromedriver", options=options)
+        self.driver = webdriver.Chrome(r"C:\Users\KITTU\Desktop\chromedriver_win32\chromedriver",options=options)
         return self.driver
 
     def quit(self):
@@ -28,6 +27,7 @@ class animix():
 
     def contentlink(self, url):
         self.webd.get(url)
+        time.sleep(1)
         self.webd.find_element_by_class_name("plyr__control").click()
         self.webd.find_element_by_class_name("plyr__control").click()
         v = self.webd.find_element_by_tag_name("source")
@@ -63,7 +63,7 @@ class animix():
     def getiframepage(self, epname, epnum):
         epname = epname.replace(' ', '-')
         self.webd.get(f'https://animixplay.to/v1/{epname}/ep{epnum}')
-        time.sleep(1)
+        time.sleep(2)
         res = self.webd.find_element_by_tag_name("iframe")
         # print(res.get_attribute("src"))
         l = self.contentlink(res.get_attribute("src"))
@@ -92,11 +92,11 @@ class gogoscrap:
             # thumimgs.append(img[i].a.img['src'])
             # release.append(rel[i].getText().replace(' ', '').replace('\n', ''))
             # animename.append(name[i].getText())
-            testjson.append({"anime": name[i].getText(), "link": img[i].a['href'], "thubnail": img[i].a.img['src'],
+            testjson.append({"anime": name[i].getText(), "link": img[i].a['href'], "thumbnail": img[i].a.img['src'],
                              "release": rel[i].getText().replace(' ', '').replace('\n', '')})
         # print(links, "\n", animename, "\n", release)
         # print(json.dumps(testjson))
-        return json.dumps(testjson)
+        return testjson
 
     def getanimeinfo(self, animeurlname):
         filteruri = animeurlname.replace(' ', '')
@@ -105,6 +105,8 @@ class gogoscrap:
         animeinfosoup = BeautifulSoup(page.content, 'html.parser')
         animeinfo = []
         reps = []
+        n=animeinfosoup.find('div',{'class':'anime_info_episodes'}).h2.text
+        print(n)
         # print(reps)
         for ep in animeinfosoup.find_all('a', {'href': '#'}):
             reps.append(ep.text)
@@ -123,5 +125,5 @@ class gogoscrap:
         tjson = []
         # print(animeinfo)
         tjson.append({"type": animeinfo[0][5:], "plot": animeinfo[1][13:], "genre": animeinfo[2][6:].replace(
-            '  ', ''), "released": animeinfo[3], "episodes-released": epcountreps})
-        return json.dumps(tjson)
+            '  ', ''), "released": animeinfo[3], "episodes_released": int(epcountreps)})
+        return tjson
