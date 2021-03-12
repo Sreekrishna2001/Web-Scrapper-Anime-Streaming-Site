@@ -115,5 +115,15 @@ def animix():
         return render_template('anime.html', link=None)
 
 
+@app.route('/searchanime', methods=['POST', 'GET'])
+def searchanime():
+    if request.method == 'GET':
+        return render_template('home.html')
+    if request.method == 'POST':
+        aniname = request.form['animename']
+        searchres = eplink.gogoscrap()
+        return searchres.search(aniname)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

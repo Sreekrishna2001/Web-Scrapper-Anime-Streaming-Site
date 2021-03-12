@@ -11,9 +11,9 @@ import requests
 class webdriversrapconn:
     def conn(self):
         options = Options()
-        options.headless = False
+        options.headless = True
         self.driver = webdriver.Chrome(
-            r"C:\Users\KITTU\Desktop\chromedriver_win32\chromedriver", options=options)
+            r"C:\Users\KITTU7410\Desktop\chromedriver_win32\chromedriver", options=options)
         return self.driver
 
     def quit(self):
@@ -82,18 +82,21 @@ class gogoscrap:
         # a = soup.find_all('a')
         name = soup.find_all('p', {'class': 'name'})
         rel = soup.find_all('p', {'class': 'released'})
-        links = []
-        release = []
-        animename = []
+        # links = []
+        # release = []
+        # animename = []
+        # thumimgs = []
         testjson = []
         for i in range(len(img)):
-            links.append(img[i].a['href'])
-            release.append(rel[i].getText().replace(' ', '').replace('\n', ''))
-            animename.append(name[i].getText())
-            testjson.append({"anime": name[i].getText(), "link": img[i].a['href'],
+            # links.append(img[i].a['href'])
+            # thumimgs.append(img[i].a.img['src'])
+            # release.append(rel[i].getText().replace(' ', '').replace('\n', ''))
+            # animename.append(name[i].getText())
+            testjson.append({"anime": name[i].getText(), "link": img[i].a['href'], "thubnail": img[i].a.img['src'],
                              "release": rel[i].getText().replace(' ', '').replace('\n', '')})
         # print(links, "\n", animename, "\n", release)
-        print(json.dumps(testjson))
+        # print(json.dumps(testjson))
+        return json.dumps(testjson)
 
     def getanimeinfo(self, animeurlname):
         filteruri = animeurlname.replace(' ', '')
@@ -108,7 +111,8 @@ class gogoscrap:
         # for eps in reps:
         ind = reps[-1].index("-")
         epcountreps = reps[-1][ind+1:].replace(" ", "")
-        # print(reps)
+        # print(str(reps))
+
         for i in animeinfosoup.find_all('p', {'class': 'type'}):
             animeinfo.append(i.text.replace("\n", ""))
         # epcount = animeinfosoup.find_all('ul', {'id': 'episode_page'})
