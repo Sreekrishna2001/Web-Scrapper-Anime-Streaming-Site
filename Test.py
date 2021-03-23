@@ -1,18 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response
 import mysql.connector
 from bs4 import BeautifulSoup
-import  json
+import json
 import eplinkgenerator as eplink
 import requests
 app = Flask(__name__)
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="kittu2001",
-    database="flask"
-)
-print('connected')
-db = mydb.cursor()
+# mydb = mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="kittu2001",
+#     database="flask"
+# )
+# print('connected')
+# db = mydb.cursor()
 
 
 @app.route('/')
@@ -61,10 +61,10 @@ def deleteemp():
         return redirect(url_for('getallemp'))
 
 
-@app.route('/delete/<int:empid>', methods=['POST'])
-def delete(empid):
-    # print(empid)
-    return empid
+# @app.route('/delete/<int:empid>', methods=['POST'])
+# def delete(empid):
+#     # print(empid)
+#     return empid
 
 
 @app.route('/getallemp')
@@ -94,11 +94,11 @@ def anime():
         return render_template('anime.html', link=None)
 
 
-@app.route('/animehome')
-def animehome():
-    html = requests.get('https://animixplay.to/')
-    soup = BeautifulSoup(html.content, "html.parser")
-    return str(soup)
+# @app.route('/animehome')
+# def animehome():
+#     html = requests.get('https://animixplay.to/')
+#     soup = BeautifulSoup(html.content, "html.parser")
+#     return str(soup)
 
 
 @app.route('/animix/<epno>', methods=['GET', 'POST'])
@@ -113,9 +113,12 @@ def animix(epno):
         animix.webd.quit()
         return render_template('anime.html', link=lik)
     if request.method == 'GET':
-        animix = eplink.animix()
-        animenam=request.cookies.get('animename')
-        lik = animix.getiframepage(animenam, epno)
+        # animix = eplink.animix()
+        g = eplink.gogoscrap()
+        animenam = request.cookies.get('animename')
+        # lik = animix.getiframepage(animenam, epno)
+        # animix.webd.quit()
+        lik = g.getifr(epno, animenam)
         return render_template('anime.html', link=lik)
 
 
@@ -133,10 +136,11 @@ def searchanime():
 @app.route('/category/<anname>')
 def animeinfopage(anname):
     aninfo = eplink.gogoscrap()
-    resp = make_response(render_template('showanime.html', data=aninfo.getanimeinfo(anname)))
+    resp = make_response(render_template(
+        'showanime.html', data=aninfo.getanimeinfo(anname)))
     resp.set_cookie('animename', anname)
     return resp
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=80)

@@ -11,8 +11,9 @@ import requests
 class webdriversrapconn:
     def conn(self):
         options = Options()
-        options.headless = True
-        self.driver = webdriver.Chrome(r"C:\Users\KITTU\Desktop\chromedriver_win32\chromedriver",options=options)
+        options.headless = False
+        self.driver = webdriver.Chrome(
+            r"C:\Users\KITTU\Desktop\chromedriver_win32\chromedriver", options=options)
         return self.driver
 
     def quit(self):
@@ -27,9 +28,9 @@ class animix():
 
     def contentlink(self, url):
         self.webd.get(url)
-        time.sleep(1)
-        self.webd.find_element_by_class_name("plyr__control").click()
-        self.webd.find_element_by_class_name("plyr__control").click()
+        # time.sleep(1)
+        # self.webd.find_element_by_class_name("plyr__control").click()
+        # self.webd.find_element_by_class_name("plyr__control").click()
         v = self.webd.find_element_by_tag_name("source")
         # print(v.get_attribute('src'))
         cl = v.get_attribute('src')
@@ -63,7 +64,7 @@ class animix():
     def getiframepage(self, epname, epnum):
         epname = epname.replace(' ', '-')
         self.webd.get(f'https://animixplay.to/v1/{epname}/ep{epnum}')
-        time.sleep(2)
+        # time.sleep(0.5)
         res = self.webd.find_element_by_tag_name("iframe")
         # print(res.get_attribute("src"))
         l = self.contentlink(res.get_attribute("src"))
@@ -105,7 +106,7 @@ class gogoscrap:
         animeinfosoup = BeautifulSoup(page.content, 'html.parser')
         animeinfo = []
         reps = []
-        n=animeinfosoup.find('div',{'class':'anime_info_episodes'}).h2.text
+        n = animeinfosoup.find('div', {'class': 'anime_info_episodes'}).h2.text
         print(n)
         # print(reps)
         for ep in animeinfosoup.find_all('a', {'href': '#'}):
@@ -127,3 +128,14 @@ class gogoscrap:
         tjson.append({"type": animeinfo[0][5:], "plot": animeinfo[1][13:], "genre": animeinfo[2][6:].replace(
             '  ', ''), "released": animeinfo[3], "episodes_released": int(epcountreps)})
         return tjson
+
+    def getifr(self, animeep, anime):
+        page = requests.get(
+            f"https://gogoanime.ai/{anime}-episode-{animeep}")
+        epsoup = BeautifulSoup(page.content, 'html.parser')
+        link = epsoup.find_all('li', {'class': 'streamsb'})[0].a['data-video']
+        return link
+
+
+# g = gogoscrap()
+# g.getifr("10")

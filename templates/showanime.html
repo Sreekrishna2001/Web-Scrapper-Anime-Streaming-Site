@@ -5,9 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      button {
+        height: 5vh;
+        width: 7vh;
+        border: 2px solid black;
+        border-radius: 1vh;
+      }
+      .align {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-auto-rows: 35px;
+      }
+      .align_info {
+        height: 50vh;
+        width: 80vh;
+        float: inline-end;
+        border: 2px solid black;
+        border-radius: 2vh;
+      }
+    </style>
   </head>
   <body>
-    <div>
+    <div class="align_info">
       {% for i in data %}
       <p>Type:{{i.type}}</p>
       <p>Plot:{{i.plot}}</p>
@@ -15,16 +35,20 @@
       <p>{{i.released}}</p>
       {% endfor %}
     </div>
+    <br />
+    <p style="height: 250px"></p>
 
     <video src=""></video>
-    {% for i in range(1,data[0].episodes_released+1) %}
-    <a href="/animix/{{i}}"><button onclick="linkep({{i}})">{{i}}</button></a>
+    <div class="align">
+      {% for i in range(1,data[0].episodes_released+1) %}
+      <a href="/animix/{{i}}"><button onclick="linkep({{i}})">{{i}}</button></a>
+    </div>
     {% endfor %}
     <script>
       function linkep(i) {
         console.log(i);
-        console.log()
-        window.location.href=''
+        console.log();
+        window.location.href = "";
       }
     </script>
   </body>
